@@ -24,7 +24,7 @@ Additionally, the Prestissimo Composer plugin for parallel installs will be adde
 
 Specify `composer.lock` as a pre-requisite.
 
-The `composer outdated` command will be added to `CHECKS`.
+The `composer outdated` command will be added to [`CHECKS`](#checks).
 
 Other available targets are documented in `make help`.
 

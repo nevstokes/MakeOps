@@ -14,6 +14,20 @@ See the example `Makefile` in this repository.
 
 ## Modules
 
+### composer
+
+If [Composer](https://getcomposer.org/) is installed on the host then this will be used otherwise Composer will be run in a container of the [official image](https://hub.docker.com/_/composer). The path to Composer (e.g. if `composer.phar` is available) or the container image to be used can both be set with the `COMPOSER` and `COMPOSER_IMAGE` environment variables respectively.
+
+Additionally, the Prestissimo Composer plugin for parallel installs will be added.
+
+#### Usage
+
+Specify `composer.lock` as a pre-requisite.
+
+The `composer outdated` command will be added to `CHECKS`.
+
+Other available targets are documented in `make help`.
+
 ### dotenv
 
 This module will create dotenv files from template versions that can be safely committed to source control (i.e. contains no passwords or api keys).
@@ -23,6 +37,10 @@ Only new keys that exist in the template will be added to the dotenv. Values wil
 Keys that already exist in the dotenv will be maintained, even if modified or removed from the template.
 
 The extension used for scm-safe can be set using the `DIST` environment variable.
+
+#### Usage
+
+For example, specify `.env` or `.test.env` as a pre-requisite.
 
 ## Utility targets
 

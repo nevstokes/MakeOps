@@ -40,7 +40,20 @@ The extension used for scm-safe can be set using the `DIST` environment variable
 
 #### Usage
 
-For example, specify `.env` or `.test.env` as a pre-requisite.
+For example, specify `.env` or `.test.env` as a pre-requisite to create them from `.env.dist` or `.test.env.dist`.
+
+### npm
+
+If [npm](http://npmjs.com) is installed on the host then this will be used otherwise npm will be run in a container of the [official Alpine image](https://hub.docker.com/_/node). The path to npm or the container image to be used can both be set with the `NPM` and `NPM_IMAGE` environment variables respectively.
+
+#### Usage
+
+Specify `package-lock.json` as a pre-requisite.
+
+In non-dev environments, the npm make module will automatically use the [`ci`](https://blog.npmjs.org/post/171556855892/introducing-npm-ci-for-faster-more-reliable) command rather than `install`.
+
+The `npm audit` command will be added to [`CHECKS`](#checks).
+
 
 ## Utility targets
 

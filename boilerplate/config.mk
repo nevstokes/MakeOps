@@ -1,34 +1,32 @@
+#######################################################################
+# General configuration variables for Make
+#######################################################################
+
 # Make sure we're using bash
 SHELL := /usr/bin/env bash
 
 # https://explainshell.com/explain?cmd=set+-euo+pipefail
-.SHELLFLAGS := -euo pipefail -c
+.SHELLFLAGS := -euo pipefail -O dotglob -c
 
 # https://www.gnu.org/software/make/manual/html_node/Special-Targets.html#Special-Targets
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
-# Unless otherwise stated, set interactive mode if stdin is a tty
-INTERACTIVE ?= $(shell [ -t 0 ] && echo 1)
-
 # Disable all command echoing without requiring @ prefixes
+# Can be overridden by setting the appropriate environment variable
 ifndef VERBOSE
 .SILENT:
 endif
 
-# Default to development environment
-ENV ?= dev
-PRODUCTION := $(if $(findstring prod,$(ENV)),1)
+# Version check
+MAKE_VERSION != $(MAKE) --version | head -1
+MAKE_REQUIRED = GNU Make 4
+ifneq ($(basename $(MAKE_VERSION)),$(MAKE_REQUIRED))
+$(error $(MAKE_REQUIRED) or better required)
+endif
 
-# Derive project repository name components if not stated elsewhere
-VENDOR ?= $(shell whoami)
-PROJECT ?= $(notdir $(CURDIR))
-
-# Current git hash
-export SOURCE_COMMIT := $(shell git rev-parse --short HEAD)
-
-# Unified ignore file
-IGNORE ?= .ignore.yaml
+# Unless otherwise stated, set interactive mode if stdin is a tty
+INTERACTIVE ?= $(shell [ -t 0 ] && echo 1)
 
 # Unless supplied, define how to run container commands
 RUNNER ?= $(shell command -v docker || command -v podman)
@@ -36,5 +34,3 @@ RUN := $(RUNNER) run --rm
 ifeq ($(INTERACTIVE),1)
 RUN += --interactive
 endif
-
-include make/ansi.mk

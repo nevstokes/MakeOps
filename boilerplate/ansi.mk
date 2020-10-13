@@ -1,5 +1,11 @@
+#######################################################################
+# Define colours, styles and helpers for fancy output (if available)
+#######################################################################
+
+ifeq ($(INTERACTIVE),1)
 ifndef ANSI
 ANSI := $(shell test $$(command -v tput >/dev/null 2>&1 && tput colors || echo 0) -ge 8 && echo 1)
+endif
 endif
 
 ifeq ($(ANSI),1)
@@ -27,7 +33,7 @@ __ := $(foreach color,red green yellow blue cyan, \
 ;)
 
 STYLE_success = $(STYLE_green)
-STYLE_info = $(STYLE_yellow)
+STYLE_info = $(STYLE_cyan)
 STYLE_error = $(STYLE_red)
 endif
 

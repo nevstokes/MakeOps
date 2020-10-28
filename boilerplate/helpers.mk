@@ -6,7 +6,7 @@
 
 ##@ Project
 
-.PHONY: help guard-%
+.PHONY: help guard-% self-update
 
 # Inspired by https://suva.sh/posts/well-documented-makefiles/
 help: ## Display this help
@@ -24,3 +24,6 @@ help: ## Display this help
 # https://stackoverflow.com/questions/4728810/makefile-variable-as-prerequisite
 guard-%:
 	$(if $(value $*),,$(error $* not set))
+
+self-update: ## Update MakeOps
+	git pull -s subtree $(INCLUDE_PATH) main

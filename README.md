@@ -1,75 +1,60 @@
-# Make it so
+# MakeOps
 
-A set of reusable generic and modular make targets.
+## tl;dr
+
+Template your orchestration with automatic containerised buildchains.
 
 ## Requirements
 
-Gnu Make > 4.0
+- Gnu Make > 4.0
+- OCI container runtime (e.g. `docker` or `podman`)
+- `git`
+
+## Installation
+
+It is recommended to add this repository to other projects with a `git` subtree merge.
+
+In the project in which you want to use MakeOps:
+
+    git remote add -f make https://github.com/nevstokes/MakeOps
+    git merge -s ours --squash --no-commit --allow-unrelated-histories make/main
+    git read-tree --prefix=make/ -u make/main
+    git commit -m "MakeOps subtree merged"
+
+Once done, this subtree can be updated to get the latest changes using the built-in target:
+
+    make self-update
 
 ## Usage
 
-These make modules are self-documenting; calling `make` with no target will display a list of what is available.
+These modules are opinionated and self-documenting; calling `make` with no target will display a list of what is available.
 
-See the example `Makefile` in this repository.
+## Detectors
 
-## Modules
+- CDK
+- Composer
+- Cypress
+- Dockerfile
+- Docker Compose
+- ESLint
+- NPM
+- Jenkinsfile
+- Jest
+- Pip
+- Poetry
+- Prettier
 
-### composer
+### Directory conventions
 
-If [Composer](https://getcomposer.org/) is installed on the host then this will be used otherwise Composer will be run in a container of the [official image](https://hub.docker.com/_/composer). The path to Composer (e.g. if `composer.phar` is available) or the container image to be used can both be set with the `COMPOSER` and `COMPOSER_IMAGE` environment variables respectively.
+- infrastructure
 
-Additionally, the Prestissimo Composer plugin for parallel installs will be added.
-
-#### Usage
-
-Specify `composer.lock` as a pre-requisite.
-
-The `composer outdated` command will be added to [`CHECKS`](#checks).
-
-Other available targets are documented in `make help`.
-
-### dotenv
-
-This module will create dotenv files from template versions that can be safely committed to source control (i.e. contains no passwords or api keys).
-
-Only new keys that exist in the template will be added to the dotenv. Values will be prompted for with any defined defaults presented for confirmation or updating. Exising environment variables in the defaults will be expanded.
-
-Keys that already exist in the dotenv will be maintained, even if modified or removed from the template.
-
-The extension used for scm-safe can be set using the `DIST` environment variable.
-
-#### Usage
-
-For example, specify `.env` or `.test.env` as a pre-requisite to create them from `.env.dist` or `.test.env.dist`.
-
-### npm
-
-If [npm](http://npmjs.com) is installed on the host then this will be used otherwise npm will be run in a container of the [official Alpine image](https://hub.docker.com/_/node). The path to npm or the container image to be used can both be set with the `NPM` and `NPM_IMAGE` environment variables respectively.
-
-#### Usage
-
-Specify `package-lock.json` as a pre-requisite.
-
-In non-dev environments, the npm make module will automatically use the [`ci`](https://blog.npmjs.org/post/171556855892/introducing-npm-ci-for-faster-more-reliable) command rather than `install`.
-
-The `npm audit` command will be added to [`CHECKS`](#checks).
-
-
-## Utility targets
-
-There are two make variables to which modules can append their targets (i.e. using `+=`). The final combined list of these targets will be run together using a submake.
+## Aggregate targets
 
 ### `CHECKS`
 
-Intended for `.PHONY` targets such as linting, static analysis and package auditing.
-
-    make checks
-
 ### `TESTS`
 
-Add targets to run different types of tests (e.g. unit, integration, functional) or individual test suites in parallel.
-
-    make tests
+## Use in CI
 
 ## Options
 
@@ -91,16 +76,8 @@ By default, these make targets will operate quietly; that is, they will not disp
 
     VERBOSE=1 make checks
 
-## Profiling
-
-While it's possible to use [`remake`](http://bashdb.sourceforge.net/remake/) as a drop-in replacement to get deeper profiling, if all that is needed is a quick overview of how long things take then it's possible to specify a proxy script that will operate in place of the normal shell and collect timing information automatically. Output will be sent to one logfile per command, named with the respective process id.
-
-    PROFILER=profile make checks
-
 ## Conventions & Considerations
 
 Make modules should be named by to what they relate and use `.mk` file extension.
 
-As far as practical, make modules should be able to be used on their own and only consist of target rules. Configuration should be able to be overriden where sensible and extracted to a separate `.config.mk` file which get included automatically.
-
-Other than having a relatively new version of `make` available, no assumptions should be made as to the environment on which they will operate. Use containerised solutions as a fall-back.
+Other than the requirements outlined here, no assumptions should be made as to the environment on which this project will operate; use containerised solutions.

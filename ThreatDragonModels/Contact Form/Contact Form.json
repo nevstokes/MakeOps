@@ -1,0 +1,16 @@
+{
+  "summary": {
+    "title": "Contact Form",
+    "owner": "Neville Stokes"
+  },
+  "detail": {
+    "contributors": [],
+    "diagrams": [
+      {
+        "title": "Architecture",
+        "thumbnail": "./public/content/images/thumbnail.jpg",
+        "id": 0
+      }
+    ]
+  }
+}
